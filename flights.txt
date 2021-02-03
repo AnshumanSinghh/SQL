@@ -1,0 +1,78 @@
+After Creation of migartion and applying those migrations:
+Type python manage.py shell and hit Enter
+>>> we will get a shell for interacting with our databases.
+Now import and do whatever we want, but we don't have to use SQL commands to perform the SQL operations:
+
+from flights.models import Flight(class name that we have define in models.py of our app flights.
+
+# to insert data into our table:
+f = Class_name(column1_name=value, ....... columnN=value)
+f.save()
+--- EXAMPLE ---
+f = Flights(origin="Patna", destination="London", duration=615)
+f.save()  # to save the the value in the table
+
+# for selecting all
+Flights.objects.all() equivalent to SELECT * FROM FLIGHT;
+
+===== For string representaion of our Table =====
+add a str dunder method to the table:
+def __str__(sellf):
+	return f"{self.id}: {self.origin} to {self.destination} in {self.duration} minutes."
+This will show us details our table in string format.
+
+Now again go to python manage.py shell:
+and import the table.
+create varibale and store all the data of our table:
+>>>all_flights = Flights.objects.all()
+>>>all_flights
+<QuerySet [<Flights: 1: New York to New Delhi>]>
+
+>>> flight = all_flights.first() # for accessing the first row.
+>>> flight
+<Flights: 1: New York to New Delhi>
+
+--- Now we can acces any its the inforamtion by: ---
+>>> flight.id # tells the id of the flight. [since flight is object for the first flight only, so it will show the data for 1st flight only]
+>>> flight.duratioin # tells us about the duration of the flight
+To delete the flight:
+flight.delete()  # will delete all the data stored in the flight (here, flight is object for first flight only) 
+
+
+To make a ForeignKey:
+Example: let's origin will be our ForeignKey then: 
+origin = models.ForeignKey(refernce_table_name, on_delete="action_I_want on deletion of data from 2nd table", related_name="way of accessing a relationship in reverse order")
+Let's I have origin the we can get the data related to it. Like origin.flight will gives us the flight origin in Airport. But the other question I might want to ask is in the
+reverse order. If I have an Airport, how do I get all of the flights that have that airport as origin?
+And so here, if I give a related name to this foreign key, Django will automatically setup the relationship going in that opposite direction.
+So, if we have an airport and I want to know all of the flights that have that airport as theit origin, lets I have named related_name = "departures".
+So if I have an airport i can access all of the departures, which gets me all of the flights that are leaving from that airport.
+
+#### Some useful commands: ####
+>>> Airport.objects.filter(city="New York")
+<QuerySet [<Airport: New York (JFK)>]>
+
+>>> Airport.objects.get(city="New York")
+<QuerySet [<Airport: New York (JFK)>]>
+
+
+To Create an administrative account inside of our Django web application via Command line:
+python manage.py createsuperuser
+
+It will create a super user. We have to set our credentials so that only we can visit the admin page.
+To visit admin page goto http://127.0.0.1:8000/admin/ and then give the credential that we have already set at the time
+of cretaion of superuser.
+Now,  we don't need to add data to our table via python manage.py shell
+because now we can add data from our admin page. But to do that we need to do one more thing.
+Goto admin.py and then,
+
+import your models like,
+from .models import Flights, Airport, Passenger
+
+Then Register your models,
+admin.site.register(Airport)
+admin.site.register(Flights)
+admin.site.register(Passenger)
+
+Now we can add or delete (or say manipulate) data directly from the admin page.
+
