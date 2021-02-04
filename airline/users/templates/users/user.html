@@ -1,0 +1,20 @@
+{% extends "users/layout.html" %}
+
+{% block body %}
+
+{% comment %} 
+    I have access to the request that was used to make this HTTP request, which
+    means I also have access to request.user who is the user associated with that request. So if 
+    user has first name then I can accsess that too or say by using this I can accesss all the data 
+    related to the user. 
+ {% endcomment %}
+
+    <h1>Welcome, <span style="color: #fDA5A4;">{{ request.user.first_name }}</span></h1>
+
+    <ul>
+        <li>Username: {{ request.user.username }}</li>
+        <li>Email: {{ request.user.email }}</li>
+    </ul>
+
+    <a href="{% url 'logout' %}">Log Out</a>
+{% endblock %}
